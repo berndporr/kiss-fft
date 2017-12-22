@@ -35,6 +35,10 @@ functions you'll need to use.
 
 Code definitions for 1d complex FFTs are in kiss_fft.c.
 
+## Real valued FFT
+
+A real valued optimized FFT which takes real valued signals as its input is implemtned in `kiss_fftr.h` and `kiss_fftr.c`. It returns the positive half-spectrum: (nfft/2+1) complex frequency bins.
+
 ## Unit tests
 Run `make testall` which compares the kiss with fftw3 and does
 testing in python.
@@ -44,8 +48,7 @@ testing in python.
 You can do other cool stuff with the extras you'll find in `tools/`
 
 * multi-dimensional FFTs 
-* real-optimized FFTs (returns the positive half-spectrum: (nfft/2+1) complex frequency bins)
-* fast convolution filtering (not available for fixed point)
+* fast convolution (not available for fixed point)
 * spectrum image creation
 
 The core fft and most `tools/` code can be compiled using float, double,
