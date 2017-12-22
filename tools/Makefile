@@ -39,10 +39,10 @@ all: $(FFTUTIL) $(FASTFILT) $(FASTFILTREAL)
 CFLAGS=-Wall -O3 $(WARNINGS) 
 # tip: try -openmp or -fopenmp to use multiple cores
 
-$(FASTFILTREAL): ../kiss_fft.c kiss_fastfir.c kiss_fftr.c
-	$(CC) -o $@ $(CFLAGS) -I.. $(TYPEFLAGS) -DREAL_FASTFIR  $+ -DFAST_FILT_UTIL -lm 
+$(FASTFILTREAL): ../kiss_fft.c kiss_fastconv.c kiss_fftr.c
+	$(CC) -o $@ $(CFLAGS) -I.. $(TYPEFLAGS) -DREAL_FASTCONV  $+ -DFAST_FILT_UTIL -lm 
 
-$(FASTFILT): ../kiss_fft.c kiss_fastfir.c
+$(FASTFILT): ../kiss_fft.c kiss_fastconv.c
 	$(CC) -o $@ $(CFLAGS) -I.. $(TYPEFLAGS) $+  -DFAST_FILT_UTIL -lm
 
 $(FFTUTIL): ../kiss_fft.c fftutil.c kiss_fftnd.c kiss_fftr.c kiss_fftndr.c

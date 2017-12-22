@@ -18,7 +18,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /*
  Some definitions that allow real or complex filtering
 */
-#ifdef REAL_FASTFIR
+#ifdef REAL_FASTCONV
 #define MIN_FFT_LEN 2048
 #include "kiss_fftr.h"
 typedef kiss_fft_scalar kffsamp_t;
@@ -35,41 +35,41 @@ typedef kiss_fft_cfg kfcfg_t;
 #define FFTINV kiss_fft
 #endif
 
-typedef struct kiss_fastfir_state *kiss_fastfir_cfg;
+typedef struct kiss_fastconv_state *kiss_fastconv_cfg;
 
 
 
-kiss_fastfir_cfg kiss_fastfir_alloc(const kffsamp_t * imp_resp,size_t n_imp_resp,
+kiss_fastconv_cfg kiss_fastconv_alloc(const kffsamp_t * imp_resp,size_t n_imp_resp,
         size_t * nfft,void * mem,size_t*lenmem);
 
 /* see do_file_filter for usage */
-size_t kiss_fastfir( kiss_fastfir_cfg cfg, kffsamp_t * inbuf, kffsamp_t * outbuf, size_t n, size_t *offset);
+size_t kiss_fastconv( kiss_fastconv_cfg cfg, kffsamp_t * inbuf, kffsamp_t * outbuf, size_t n, size_t *offset);
 
 
 
 static int verbose=0;
 
 
-struct kiss_fastfir_state{
+struct kiss_fastconv_state{
     size_t nfft;
     size_t ngood;
     kfcfg_t fftcfg;
     kfcfg_t ifftcfg;
-    kiss_fft_cpx * fir_freq_resp;
+    kiss_fft_cpx * conv_freq_resp;
     kiss_fft_cpx * freqbuf;
     size_t n_freq_bins;
     kffsamp_t * tmpbuf;
 };
 
 
-kiss_fastfir_cfg kiss_fastfir_alloc(
+kiss_fastconv_cfg kiss_fastconv_alloc(
         const kffsamp_t * imp_resp,size_t n_imp_resp,
         size_t *pnfft, /* if <= 0, an appropriate size will be chosen */
         void * mem,size_t*lenmem)
 {
-    kiss_fastfir_cfg st = NULL;
+    kiss_fastconv_cfg st = NULL;
     size_t len_fftcfg,len_ifftcfg;
-    size_t memneeded = sizeof(struct kiss_fastfir_state);
+    size_t memneeded = sizeof(struct kiss_fastconv_state);
     char * ptr;
     size_t i;
     size_t nfft=0;
@@ -94,7 +94,7 @@ kiss_fastfir_cfg kiss_fastfir_alloc(
     if (pnfft)
         *pnfft = nfft;
 
-#ifdef REAL_FASTFIR
+#ifdef REAL_FASTCONV
     n_freq_bins = nfft/2 + 1;
 #else
     n_freq_bins = nfft;
@@ -107,16 +107,16 @@ kiss_fastfir_cfg kiss_fastfir_alloc(
     memneeded += len_ifftcfg;  
     /* tmpbuf */
     memneeded += sizeof(kffsamp_t) * nfft;
-    /* fir_freq_resp */
+    /* conv_freq_resp */
     memneeded += sizeof(kiss_fft_cpx) * n_freq_bins;
     /* freqbuf */
     memneeded += sizeof(kiss_fft_cpx) * n_freq_bins;
     
     if (lenmem == NULL) {
-        st = (kiss_fastfir_cfg) malloc (memneeded);
+        st = (kiss_fastconv_cfg) malloc (memneeded);
     } else {
         if (*lenmem >= memneeded)
-            st = (kiss_fastfir_cfg) mem;
+            st = (kiss_fastconv_cfg) mem;
         *lenmem = memneeded;
     }
     if (!st)
@@ -139,7 +139,7 @@ kiss_fastfir_cfg kiss_fastfir_alloc(
     st->freqbuf = (kiss_fft_cpx*)ptr;
     ptr += sizeof(kiss_fft_cpx) * n_freq_bins;
     
-    st->fir_freq_resp = (kiss_fft_cpx*)ptr;
+    st->conv_freq_resp = (kiss_fft_cpx*)ptr;
     ptr += sizeof(kiss_fft_cpx) * n_freq_bins;
 
     FFT_ALLOC (nfft,0,st->fftcfg , &len_fftcfg);
@@ -153,27 +153,27 @@ kiss_fastfir_cfg kiss_fastfir_alloc(
         st->tmpbuf[ nfft - n_imp_resp + 1 + i ] = imp_resp[ i ];
     }
 
-    FFTFWD(st->fftcfg,st->tmpbuf,st->fir_freq_resp);
+    FFTFWD(st->fftcfg,st->tmpbuf,st->conv_freq_resp);
 
     /* TODO: this won't work for fixed point */
     scale = 1.0 / st->nfft;
 
     for ( i=0; i < st->n_freq_bins; ++i ) {
-        st->fir_freq_resp[i].r *= scale;
-        st->fir_freq_resp[i].i *= scale;
+        st->conv_freq_resp[i].r *= scale;
+        st->conv_freq_resp[i].i *= scale;
     }
     return st;
 }
 
-static void fastconv1buf(const kiss_fastfir_cfg st,const kffsamp_t * in,kffsamp_t * out)
+static void fastconv1buf(const kiss_fastconv_cfg st,const kffsamp_t * in,kffsamp_t * out)
 {
     size_t i;
     /* multiply the frequency response of the input signal by
-     that of the fir filter*/
+     that of the conv filter*/
     FFTFWD( st->fftcfg, in , st->freqbuf );
     for ( i=0; i<st->n_freq_bins; ++i ) {
         kiss_fft_cpx tmpsamp; 
-        C_MUL(tmpsamp,st->freqbuf[i],st->fir_freq_resp[i]);
+        C_MUL(tmpsamp,st->freqbuf[i],st->conv_freq_resp[i]);
         st->freqbuf[i] = tmpsamp;
     }
 
@@ -185,7 +185,7 @@ static void fastconv1buf(const kiss_fastfir_cfg st,const kffsamp_t * in,kffsamp_
    return value: the number of samples completely processed
    n-retval samples should be copied to the front of the next input buffer */
 static size_t kff_nocopy(
-        kiss_fastfir_cfg st,
+        kiss_fastconv_cfg st,
         const kffsamp_t * inbuf, 
         kffsamp_t * outbuf,
         size_t n)
@@ -201,7 +201,7 @@ static size_t kff_nocopy(
 }
 
 static
-size_t kff_flush(kiss_fastfir_cfg st,const kffsamp_t * inbuf,kffsamp_t * outbuf,size_t n)
+size_t kff_flush(kiss_fastconv_cfg st,const kffsamp_t * inbuf,kffsamp_t * outbuf,size_t n)
 {
     size_t zpad=0,ntmp;
 
@@ -220,8 +220,8 @@ size_t kff_flush(kiss_fastfir_cfg st,const kffsamp_t * inbuf,kffsamp_t * outbuf,
     return ntmp + st->ngood - zpad;
 }
 
-size_t kiss_fastfir(
-        kiss_fastfir_cfg vst,
+size_t kiss_fastconv(
+        kiss_fastconv_cfg vst,
         kffsamp_t * inbuf,
         kffsamp_t * outbuf,
         size_t n_new,
@@ -261,7 +261,7 @@ void direct_file_filter(
     size_t nbuf;
     size_t oldestlag = 0;
     size_t k, tap;
-#ifndef REAL_FASTFIR
+#ifndef REAL_FASTCONV
     kffsamp_t tmp;
 #endif    
 
@@ -285,7 +285,7 @@ void direct_file_filter(
 
         for (k = 0; k < nread; ++k) {
             tmph = imp_resp+nlag;
-#ifdef REAL_FASTFIR
+#ifdef REAL_FASTCONV
             outval = 0;
             for (tap = oldestlag; tap < nlag; ++tap)
                 outval += circbuf[tap] * *tmph--;
@@ -336,14 +336,14 @@ void do_file_filter(
     int fdout;
     size_t n_samps_buf;
 
-    kiss_fastfir_cfg cfg;
+    kiss_fastconv_cfg cfg;
     kffsamp_t *inbuf,*outbuf;
     int nread,nwrite;
     size_t idx_inbuf;
 
     fdout = fileno(fout);
 
-    cfg=kiss_fastfir_alloc(imp_resp,n_imp_resp,&nfft,0,0);
+    cfg=kiss_fastconv_alloc(imp_resp,n_imp_resp,&nfft,0,0);
 
     /* use length to minimize buffer shift*/
     n_samps_buf = 8*4096/sizeof(kffsamp_t); 
@@ -363,8 +363,8 @@ void do_file_filter(
 
         /* If nread==0, then this is a flush.
             The total number of samples in input is idx_inbuf + nread . */
-        nwrite = kiss_fastfir(cfg, inbuf, outbuf,nread,&idx_inbuf) * sizeof(kffsamp_t);
-        /* kiss_fastfir moved any unused samples to the front of inbuf and updated idx_inbuf */
+        nwrite = kiss_fastconv(cfg, inbuf, outbuf,nread,&idx_inbuf) * sizeof(kffsamp_t);
+        /* kiss_fastconv moved any unused samples to the front of inbuf and updated idx_inbuf */
 
         if ( write(fdout, outbuf, nwrite) != nwrite ) {
             perror("short write");
@@ -385,7 +385,7 @@ int main(int argc,char**argv)
     FILE *fout=stdout;
     FILE *filtfile=NULL;
     while (1) {
-        int c=getopt(argc,argv,"n:h:i:o:vd");
+        int c=getopt(argc,argv,"n:h:i:o:vd?");
         if (c==-1) break;
         switch (c) {
             case 'v':
@@ -421,7 +421,7 @@ int main(int argc,char**argv)
             case '?':
                      fprintf(stderr,"usage options:\n"
                             "\t-n nfft: fft size to use\n"
-                            "\t-d : use direct FIR filtering, not fast convolution\n"
+                            "\t-d : use direct filtering, not fast convolution\n"
                             "\t-i filename: input file\n"
                             "\t-o filename: output(filtered) file\n"
                             "\t-n nfft: fft size to use\n"
@@ -431,12 +431,12 @@ int main(int argc,char**argv)
         }
     }
     if (filtfile==NULL) {
-        fprintf(stderr,"You must supply the FIR coeffs via -h\n");
+        fprintf(stderr,"Please supply the convolution coefficients. Use -? for the options.\n");
         exit(1);
     }
     fseek(filtfile,0,SEEK_END);
     nh = ftell(filtfile) / sizeof(kffsamp_t);
-    if (verbose) fprintf(stderr,"%d samples in FIR filter\n",(int)nh);
+    if (verbose) fprintf(stderr,"%d samples in filter\n",(int)nh);
     h = (kffsamp_t*)malloc(sizeof(kffsamp_t)*nh);
     fseek(filtfile,0,SEEK_SET);
     if (fread(h,sizeof(kffsamp_t),nh,filtfile) != nh)
