@@ -15,7 +15,7 @@ incorporated into someone's C program in a few minutes with trivial licensing.
 ```
         #include "kiss_fft.h"
 
-        kiss_fft_cfg cfg = kiss_fft_alloc( nfft ,is_inverse_fft ,0,0 );
+        kiss_fft_cfg cfg = kiss_fft_alloc( nfft, is_inverse_fft, 0, 0 );
 
             // put kth sample in cx_in[k].r and cx_in[k].i
             
@@ -35,13 +35,17 @@ functions you'll need to use.
 
 Code definitions for 1d complex FFTs are in kiss_fft.c.
 
+## Unit tests
+Run `make testall` which compares the kiss with fftw3 and does
+testing in python.
+
 ## Advanced topics
 
 You can do other cool stuff with the extras you'll find in `tools/`
 
 * multi-dimensional FFTs 
-* real-optimized FFTs  (returns the positive half-spectrum: (nfft/2+1) complex frequency bins)
-* fast convolution FIR filtering (not available for fixed point)
+* real-optimized FFTs (returns the positive half-spectrum: (nfft/2+1) complex frequency bins)
+* fast convolution filtering (not available for fixed point)
 * spectrum image creation
 
 The core fft and most `tools/` code can be compiled using float, double,
