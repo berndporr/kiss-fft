@@ -3,7 +3,9 @@
 KISS FFT - A mixed-radix Fast Fourier Transform based up on the principle, 
 "Keep It Simple, Stupid."
 
-## Basic usage
+## In C
+
+### Complex to Complex FFT and IFFT
 
     The basic usage for 1-d complex FFT is:
 
@@ -30,24 +32,15 @@ functions you'll need to use.
 
 Code definitions for 1d complex FFTs are in kiss_fft.c.
 
-## Real valued FFT
+### Real valued FFT
 
 A real valued optimized FFT which takes real valued signals as its input is implemtned in `kiss_fftr.h` and `kiss_fftr.c`. It returns the positive half-spectrum: (nfft/2+1) complex frequency bins.
 
-## Unit tests
-Run `make testall` which compares the kiss with fftw3 and does
+### Unit tests for the C library
+Run `make testall` which compares the kiss library with the fftw3 and does
 testing in python.
 
-
-## Android
-The subdir `jnifft` contains an Android JNI wrapper which creates an Android library
-called `jnifft` and can be found in `jnifft/build/outputs/`. Useage:
-```
-kissFastFourierTransformer = new KISSFastFourierTransformer();
-Complex[] outdata1 = kissFastFourierTransformer.transform(indata, TransformType.FORWARD);
-```
-
-## Advanced topics
+### Advanced topics for the C library
 
 You can do other cool stuff with the extras you'll find in `tools/`
 
@@ -57,6 +50,33 @@ You can do other cool stuff with the extras you'll find in `tools/`
 
 The core fft and most `tools/` code can be compiled using float, double,
  Q15 short or Q31 samples. The default is float.
+
+
+## Android
+You can do super-fast native FFTs in Android with KISS-FFT.
+
+### Compilation
+Open this project in Android studio and run "Build". Depending
+on the config you'll generate a debug version of the kiss-fft
+library or a release version.
+
+### Installation
+The Android library is in `jnifft/build/outputs/`.
+Just import it into your Android project with "New-Module-Android Library" and add
+the dependency with
+```
+compile project(":jnifft-release")
+```
+
+### Usage
+```
+kissFastFourierTransformer = new KISSFastFourierTransformer();
+Complex[] outdata = kissFastFourierTransformer.transform(indata, TransformType.FORWARD);
+```
+where `indata` and `outdata` are of type Complex as defined in apache Commons
+and the constant `TransformType` is also defined there which determines
+if it's a forward or inverse transform. It can be used as a direct
+replacement of the apache commons FFT function.
 
 
 ## Attribution
