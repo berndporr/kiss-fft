@@ -3,11 +3,6 @@
 KISS FFT - A mixed-radix Fast Fourier Transform based up on the principle, 
 "Keep It Simple, Stupid."
 
-There are many great fft libraries already around. Kiss FFT is not trying
-to be better than any of them. It only attempts to be a reasonably efficient, 
-moderately useful FFT that can use fixed or floating data types and can be 
-incorporated into someone's C program in a few minutes with trivial licensing.
-
 ## Basic usage
 
     The basic usage for 1-d complex FFT is:
@@ -42,6 +37,15 @@ A real valued optimized FFT which takes real valued signals as its input is impl
 ## Unit tests
 Run `make testall` which compares the kiss with fftw3 and does
 testing in python.
+
+
+## Android
+The subdir `jnifft` contains an Android JNI wrapper which creates an Android library
+called `jnifft` and can be found in `jnifft/build/outputs/`. Useage:
+```
+kissFastFourierTransformer = new KISSFastFourierTransformer();
+Complex[] outdata1 = kissFastFourierTransformer.transform(indata, TransformType.FORWARD);
+```
 
 ## Advanced topics
 

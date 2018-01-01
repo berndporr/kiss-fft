@@ -13,13 +13,12 @@ public class KISSFastFourierTransformer {
         System.loadLibrary("kiss-fft-lib");
     }
 
-    private Complex inputData;
-    private Complex[] outputData;
-
     public Complex[] transform(Complex[] complex, TransformType transformType) {
-        return dofft(complex);
+        int is_inverse = 0;
+        if (transformType == TransformType.INVERSE) is_inverse = 1;
+        return dofft(complex,is_inverse);
     }
 
-    private native Complex[] dofft(Complex[] data);
+    private native Complex[] dofft(Complex[] data, int is_inverse);
 
 }

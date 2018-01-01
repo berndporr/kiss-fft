@@ -10,19 +10,6 @@
 extern "C" {
 #endif
 
-/*
- ATTENTION!
- If you would like a :
- -- a utility that will handle the caching of fft objects
- -- real-only (no imaginary time component ) FFT
- -- a multi-dimensional FFT
- -- a command-line utility to perform ffts
- -- a command-line utility to perform fast-convolution filtering
-
- Then see kfc.h kiss_fftr.h kiss_fftnd.h fftutil.c kiss_fastfir.c
-  in the tools/ directory.
-*/
-
 #define KISS_FFT_MALLOC malloc
 #define KISS_FFT_FREE free
 
@@ -53,10 +40,13 @@ typedef struct kiss_fft_state* kiss_fft_cfg;
  *  
  *  Initialize a FFT (or IFFT) algorithm's cfg/state buffer.
  *
- *  typical usage:      kiss_fft_cfg mycfg=kiss_fft_alloc(1024,0,NULL,NULL);
+ *  typical usage:      kiss_fft_cfg mycfg=kiss_fft_alloc(1024,0,NULL,NULL); for FFT
+ *                      kiss_fft_cfg mycfg=kiss_fft_alloc(1024,1,NULL,NULL); for IFFT
  *
  *  The return value from fft_alloc is a cfg buffer used internally
  *  by the fft routine or NULL.
+ *
+ *  The inverse FFT is calculated if inverse_fft is non-zero.
  *
  *  If lenmem is NULL, then kiss_fft_alloc will allocate a cfg buffer using malloc.
  *  The returned value should be free()d when done to avoid memory leaks.

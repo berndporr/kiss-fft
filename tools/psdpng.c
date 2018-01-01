@@ -55,7 +55,6 @@ void config(int argc,char** argv)
         default:
             fprintf (stderr, "bad %c\n", c);
             exit (1);
-            break;
         }
     }
     if ( optind < argc ) {

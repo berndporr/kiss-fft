@@ -8,7 +8,8 @@ extern "C" {
 
 JNIEXPORT jobjectArray JNICALL
 Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofft(JNIEnv *env, jobject,
-                                                                jobjectArray data) {
+                                                                jobjectArray data,
+                                                                jint is_inverse) {
 
     jclass complex = env->FindClass("org/apache/commons/math3/complex/Complex");
     jmethodID getImaginary = env->GetMethodID(complex, "getImaginary", "()D");
@@ -20,8 +21,6 @@ Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofft(JNIEnv *env, job
         __android_log_write(ANDROID_LOG_ERROR, TAG, "FFT array length < 1!");
         return NULL;
     }
-
-    int is_inverse = 0;
 
     kiss_fft_cfg cfg = kiss_fft_alloc(n, is_inverse, 0, 0);
     kiss_fft_cpx *inArray = new kiss_fft_cpx[n];

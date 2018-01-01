@@ -17,68 +17,68 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 typedef struct cached_fft *kfc_cfg;
 
-struct cached_fft
-{
+struct cached_fft {
     int nfft;
     int inverse;
     kiss_fft_cfg cfg;
     kfc_cfg next;
 };
 
-static kfc_cfg cache_root=NULL;
-static int ncached=0;
+static kfc_cfg cache_root = NULL;
+static int ncached = 0;
 
-static kiss_fft_cfg find_cached_fft(int nfft,int inverse)
-{
+static kiss_fft_cfg find_cached_fft(int nfft, int inverse) {
     size_t len;
-    kfc_cfg  cur=cache_root;
-    kfc_cfg  prev=NULL;
-    while ( cur ) {
-        if ( cur->nfft == nfft && inverse == cur->inverse )
+    kfc_cfg cur = cache_root;
+    kfc_cfg prev = NULL;
+    while (cur) {
+        if (cur->nfft == nfft && inverse == cur->inverse)
             break;/*found the right node*/
         prev = cur;
         cur = prev->next;
     }
-    if (cur== NULL) {
+    if (cur == NULL) {
         /* no cached node found, need to create a new one*/
-        kiss_fft_alloc(nfft,inverse,0,&len);
-        cur = (kfc_cfg)KISS_FFT_MALLOC((sizeof(struct cached_fft) + len ));
+        kiss_fft_alloc(nfft, inverse, 0, &len);
+        cur = (kfc_cfg) KISS_FFT_MALLOC((sizeof(struct cached_fft) + len));
         if (cur == NULL)
             return NULL;
-        cur->cfg = (kiss_fft_cfg)(cur+1);
-        kiss_fft_alloc(nfft,inverse,cur->cfg,&len);
-        cur->nfft=nfft;
-        cur->inverse=inverse;
+        cur->cfg = (kiss_fft_cfg)(cur + 1);
+        kiss_fft_alloc(nfft, inverse, cur->cfg, &len);
+        cur->nfft = nfft;
+        cur->inverse = inverse;
         cur->next = NULL;
-        if ( prev )
+        if (prev)
             prev->next = cur;
         else
             cache_root = cur;
         ++ncached;
     }
-    return cur->cfg;
+    if (cur) {
+        return cur->cfg;
+    } else {
+        return NULL;
+    }
 }
 
-void kfc_cleanup(void)
-{
-    kfc_cfg  cur=cache_root;
-    kfc_cfg  next=NULL;
-    while (cur){
+void kfc_cleanup(void) {
+    kfc_cfg cur = cache_root;
+    kfc_cfg next = NULL;
+    while (cur) {
         next = cur->next;
         free(cur);
-        cur=next;
+        cur = next;
     }
-    ncached=0;
+    ncached = 0;
     cache_root = NULL;
 }
-void kfc_fft(int nfft, const kiss_fft_cpx * fin,kiss_fft_cpx * fout)
-{
-    kiss_fft( find_cached_fft(nfft,0),fin,fout );
+
+void kfc_fft(int nfft, const kiss_fft_cpx *fin, kiss_fft_cpx *fout) {
+    kiss_fft(find_cached_fft(nfft, 0), fin, fout);
 }
 
-void kfc_ifft(int nfft, const kiss_fft_cpx * fin,kiss_fft_cpx * fout)
-{
-    kiss_fft( find_cached_fft(nfft,1),fin,fout );
+void kfc_ifft(int nfft, const kiss_fft_cpx *fin, kiss_fft_cpx *fout) {
+    kiss_fft(find_cached_fft(nfft, 1), fin, fout);
 }
 
 #ifdef KFC_TEST
