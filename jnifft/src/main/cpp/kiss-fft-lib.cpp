@@ -42,6 +42,7 @@ Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofft(JNIEnv *env, job
         }
         inArray[j].r = re;
         inArray[j].i = im;
+        env->DeleteLocalRef(one);
     }
 
     kiss_fft(cfg, inArray, outArray);
@@ -54,6 +55,7 @@ Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofft(JNIEnv *env, job
         double im = outArray[j].i;
         jobject cObj = env->NewObject(complex, complexDoubleInit, re, im);
         env->SetObjectArrayElement(ret, j, cObj);
+        env->DeleteLocalRef(cObj);
     }
 
     free(cfg);
