@@ -250,30 +250,6 @@ void kf_work(
     const int m = *factors++; /* stage's fft length/p */
     const kiss_fft_cpx *Fout_end = Fout + p * m;
 
-#ifdef _OPENMP
-    // use openmp extensions at the
-    // top-level (not recursive)
-    if (fstride==1 && p<=5)
-    {
-        int k;
-
-        // execute the p different work units in different threads
-#       pragma omp parallel for
-        for (k=0;k<p;++k) 
-            kf_work( Fout +k*m, f+ fstride*in_stride*k,fstride*p,in_stride,factors,st);
-        // all threads have joined by this point
-
-        switch (p) {
-            case 2: kf_bfly2(Fout,fstride,st,m); break;
-            case 3: kf_bfly3(Fout,fstride,st,m); break; 
-            case 4: kf_bfly4(Fout,fstride,st,m); break;
-            case 5: kf_bfly5(Fout,fstride,st,m); break; 
-            default: kf_bfly_generic(Fout,fstride,st,m,p); break;
-        }
-        return;
-    }
-#endif
-
     if (m == 1) {
         do {
             *Fout = *f;
@@ -370,8 +346,7 @@ kiss_fft_cfg kiss_fft_alloc(int nfft, int inverse_fft, void *mem, size_t *lenmem
         st->inverse = inverse_fft;
 
         for (i = 0; i < nfft; ++i) {
-            const double pi = 3.141592653589793238462643383279502884197169399375105820974944;
-            double phase = -2 * pi * i / nfft;
+            double phase = -2.0 * M_PI * ((double)i) / ((double)nfft);
             if (st->inverse)
                 phase *= -1;
             kf_cexp(st->twiddles + i, phase);
@@ -407,10 +382,6 @@ void kiss_fft(kiss_fft_cfg cfg, const kiss_fft_cpx *fin, kiss_fft_cpx *fout) {
     kiss_fft_stride(cfg, fin, fout, 1);
 }
 
-
-void kiss_fft_cleanup(void) {
-    // nothing needed any more
-}
 
 int kiss_fft_next_fast_size(int n) {
     while (1) {

@@ -15,6 +15,11 @@ Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofft(JNIEnv *env, job
     jmethodID getImaginary = env->GetMethodID(complex, "getImaginary", "()D");
     jmethodID getReal = env->GetMethodID(complex, "getReal", "()D");
 
+    if (data == NULL) {
+        __android_log_write(ANDROID_LOG_ERROR, TAG, "data has nullptr.");
+        return NULL;
+    }
+
     int n = env->GetArrayLength(data);
 
     if (n < 1) {
@@ -29,10 +34,14 @@ Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofft(JNIEnv *env, job
 
     for (int j = 0; j < n; j++) {
         jobject one = env->GetObjectArrayElement(data, j);
-        double re = env->CallDoubleMethod(one, getReal);
-        double im = env->CallDoubleMethod(one, getImaginary);
-        inArray[j].r = (float) re;
-        inArray[j].i = (float) im;
+        double re = 0;
+        double im = 0;
+        if (!(env->IsSameObject(one,NULL))) {
+            re = env->CallDoubleMethod(one, getReal);
+            im = env->CallDoubleMethod(one, getImaginary);
+        }
+        inArray[j].r = re;
+        inArray[j].i = im;
     }
 
     kiss_fft(cfg, inArray, outArray);
