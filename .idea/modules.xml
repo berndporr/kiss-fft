@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/jnifft/jnifft.iml" filepath="$PROJECT_DIR$/jnifft/jnifft.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jnifft/jnifft.iml" filepath="$PROJECT_DIR$/jnifft/jnifft.iml" />
       <module fileurl="file://$PROJECT_DIR$/kiss-fft.iml" filepath="$PROJECT_DIR$/kiss-fft.iml" />
     </modules>
   </component>
