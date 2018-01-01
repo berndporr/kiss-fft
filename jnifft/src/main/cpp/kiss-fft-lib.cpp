@@ -57,8 +57,8 @@ Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofft(JNIEnv *env, job
     }
 
     free(cfg);
-    delete inArray;
-    delete outArray;
+    delete[] inArray;
+    delete[] outArray;
 
     return ret;
 }

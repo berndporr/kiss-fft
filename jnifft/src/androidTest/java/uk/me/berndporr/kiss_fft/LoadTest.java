@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class LoadTest {
 
-    KISSFastFourierTransformer kissFastFourierTransformer;
+    private KISSFastFourierTransformer kissFastFourierTransformer;
 
     @Test
     public void useAppContext() throws Exception {

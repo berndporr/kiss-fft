@@ -4,7 +4,10 @@ import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.TransformType;
 
 /**
- * Created by Bernd Porr on 31/12/17.
+ * Created by Bernd Porr, mail@berndporr.me.uk on 31/12/17.
+ *
+ * Fast Fourier JAVA class which calls the C KISS FFT for
+ * superfast native FFT.
  */
 
 public class KISSFastFourierTransformer {

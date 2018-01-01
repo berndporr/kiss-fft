@@ -10,20 +10,23 @@ import org.apache.commons.math3.transform.TransformType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.content.ContentValues.TAG;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by Bernd Porr on 31/12/17.
+ * Created by Bernd Porr, mail@berndporr.me.uk on 31/12/17.
+ *
+ * Test class which compares the results with the apache FFT
+ * library and does an FFT / IFFT test to see if the result
+ * is the same again (within an error margin).
  */
 
 @RunWith(AndroidJUnit4.class)
 public class FFTTest {
 
-    KISSFastFourierTransformer kissFastFourierTransformer;
+    private KISSFastFourierTransformer kissFastFourierTransformer;
 
-    FastFourierTransformer fastFourierTransformer;
+    private FastFourierTransformer fastFourierTransformer;
 
     @Test
     public void compareWithMathCommons() throws Exception {
@@ -49,7 +52,6 @@ public class FFTTest {
     @Test
     public void doFFTandIFFT() throws Exception {
         kissFastFourierTransformer = new KISSFastFourierTransformer();
-        assertFalse(kissFastFourierTransformer == null);
 
         final int testsize = 64;
         Complex[] indata = new Complex[testsize];
