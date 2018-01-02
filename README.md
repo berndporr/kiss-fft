@@ -67,9 +67,10 @@ Double which perform the conversion to Complex in C++ and are also very fast.
 
 ### Real to Complex and Complex to Real transform
 For real valued sequences there are two optimised functions which
-directly perform the FFT on the raw double bufferwithout any
+directly perform the FFT on the raw double buffer without any
 conversion to complex. For real valued sequences this runs at least
-twice as fast as the functions above. The complex sequence of the real sequence of length N has the length
+twice as fast as the functions above.
+The complex frequency sequence of the real sequence of length N has the length
 N/2+1 and then expands back to length N by the inverse transform:
 ```
 public Complex[] transformRealOptimisedForward(double[] v)
@@ -77,10 +78,9 @@ public double[] transformRealOptimisedInverse(Complex[] v)
 ```
 
 ### Unit tests
-Run `FFTTest` which compares the results with that from the
-apache commons FFT, does a DC test and does an ifft(fft) test to
-check the rounding errors and remaining imaginary parts.
-
+Run `FFTTest` and `FFTRTest` which compares the results with that from the
+apache commons FFT and does an ifft(fft) test to
+check for rounding errors.
 
 ## Attribution
 This is a fork from the original kiss-fft library by Mark Borgerding
