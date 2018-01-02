@@ -7,7 +7,7 @@ KISS FFT - A mixed-radix Fast Fourier Transform based up on the principle,
 
 ### Complex to Complex FFT and IFFT
 
-    The basic usage for 1-d complex FFT is:
+The basic usage for 1-d complex FFT is:
 
 ```
         #include "kiss_fft.h"
@@ -23,8 +23,8 @@ KISS FFT - A mixed-radix Fast Fourier Transform based up on the principle,
         free(cfg);
 ```
 
-Note: frequency-domain data is stored from dc up to 2pi.
-So cx_out[0] is the dc bin of the FFT and cx_out[nfft/2]
+The frequency-domain data is stored from DC up to 2PI.
+So cx_out[0] is the DC bin of the FFT and cx_out[nfft/2]
 is the Nyquist bin (if exists).
 
 Declarations are in "kiss_fft.h", along with a brief description of the 
@@ -53,7 +53,7 @@ The core fft and most `tools/` code can be compiled using float, double,
 
 
 ## Android
-You can do super-fast native FFTs in Android with KISS-FFT.
+You can do super-fast native FFTs under Android with KISS-FFT.
 
 ### Compilation
 Open this project in Android studio and run "Build". Depending
