@@ -22,7 +22,7 @@ import static junit.framework.Assert.assertTrue;
  */
 
 @RunWith(AndroidJUnit4.class)
-public class FFTTest {
+public class FFTRTest {
 
     private KISSFastFourierTransformer kissFastFourierTransformer;
 
@@ -33,12 +33,12 @@ public class FFTTest {
         assertFalse(kissFastFourierTransformer == null);
 
         final int testsize = 64;
-        Complex[] indata = new Complex[testsize];
+        double[] indata = new double[testsize];
         for (int i = 0; i < testsize; i++)
-            indata[i] = new Complex(Math.random() - 0.5);
-        Complex[] outdata1 = kissFastFourierTransformer.transform(indata, TransformType.FORWARD);
+            indata[i] = Math.random() - 0.5;
+        Complex[] outdata1 = kissFastFourierTransformer.transformRealOptimisedForward(indata);
         Complex[] outdata2 = fastFourierTransformer.transform(indata, TransformType.FORWARD);
-        for (int i = 0; i < testsize; i++) {
+        for (int i = 0; i < outdata1.length; i++) {
             double err = outdata1[i].subtract(outdata2[i]).abs();
             Log.d("FFTTest", "" + i +
                     " (" + outdata1[i].getReal() + "," + outdata1[i].getImaginary() + ") -- " +
@@ -55,29 +55,19 @@ public class FFTTest {
         final int testsize = 64;
         double[] indata = new double[testsize];
         for (int i = 0; i < testsize; i++) indata[i] = Math.random() - 0.5;
-        Complex[] outdata1 = kissFastFourierTransformer.transform(indata);
-        Complex[] outdata2 = kissFastFourierTransformer.transform(outdata1, TransformType.INVERSE);
+        Complex[] outdata1 = kissFastFourierTransformer.transformRealOptimisedForward(indata);
+        double[] outdata2 = kissFastFourierTransformer.transformRealOptimisedInverse(outdata1);
         for (int i = 0; i < testsize; i++) {
-            double err = Math.abs(indata[i] - outdata2[i].getReal());
+            double err = Math.abs(indata[i] - outdata2[i]);
             Log.d("FFTTest", "" + i +
                     " (" + indata[i] + ",0) -- " +
-                    " (" + outdata2[i].getReal() + "," + outdata2[i].getImaginary() + ") = " + err);
+                    " (" + outdata2[i] + "0) = " + err);
             assertTrue(err < 1E-15);
-            assertTrue(Math.abs(outdata2[i].getImaginary()) < 1E-15);
         }
     }
 
 
-    @Test
-    public void doDCTest() throws Exception {
-        kissFastFourierTransformer = new KISSFastFourierTransformer();
 
-        final int testsize = 64;
-        Double[] indata = new Double[testsize];
-        for (int i = 0; i < testsize; i++) indata[i] = 1.0;
-        Complex[] outdata1 = kissFastFourierTransformer.transform(indata);
-        assertTrue(Math.abs(outdata1[0].getReal() - (double)testsize)<1E-10);
-    }
 
 
 }

@@ -36,24 +36,8 @@ Code definitions for 1d complex FFTs are in kiss_fft.c.
 
 A real valued optimized FFT which takes real valued signals as its input is implemtned in `kiss_fftr.h` and `kiss_fftr.c`. It returns the positive half-spectrum: (nfft/2+1) complex frequency bins.
 
-### Unit tests for the C library
-Run `make testall` which compares the kiss library with the fftw3 and does
-testing in python.
-
-### Advanced topics for the C library
-
-You can do other cool stuff with the extras you'll find in `tools/`
-
-* multi-dimensional FFTs 
-* fast convolution (not available for fixed point)
-* spectrum image creation
-
-The core fft and most `tools/` code can be compiled using float, double,
- Q15 short or Q31 samples. The default is float.
-
-
 ## Android
-You can do super-fast native FFTs under Android with KISS-FFT.
+Do super-fast native FFTs under Android
 
 ### Compilation
 Open this project in Android studio and run "Build". Depending
@@ -68,17 +52,29 @@ the dependency with
 compile project(":jnifft-release")
 ```
 
-### Usage
+### Complex to Complex transform
 ```
 kissFastFourierTransformer = new KISSFastFourierTransformer();
 Complex[] outdata = kissFastFourierTransformer.transform(indata, TransformType.FORWARD);
 ```
-where `indata` can be of type Complex, Double or double
-(converterted into Complex) and `outdata`
-is of type Complex as defined in apache Commons
-and the constant `TransformType` is also defined there which determines
+which transforms from Complex to Complex as defined in the apache Commons.
+The constant `TransformType` is also defined in apache Commons which determines
 if it's a forward or inverse transform. It can be used as a direct
 replacement of the apache commons FFT function.
+
+There are also convenience functions as in the commons library for double and
+Double which perform the conversion to Complex in C++ and are also very fast.
+
+### Real to Complex and Complex to Real transform
+For real valued sequences there are two optimised functions which
+directly perform the FFT on the raw double bufferwithout any
+conversion to complex. For real valued sequences this runs at least
+twice as fast as the functions above. The complex sequence of the real sequence of length N has the length
+N/2+1 and then expands back to length N by the inverse transform:
+```
+public Complex[] transformRealOptimisedForward(double[] v)
+public double[] transformRealOptimisedInverse(Complex[] v)
+```
 
 ### Unit tests
 Run `FFTTest` which compares the results with that from the

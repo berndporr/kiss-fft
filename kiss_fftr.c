@@ -145,4 +145,7 @@ void kiss_fftri(kiss_fftr_cfg st,const kiss_fft_cpx *freqdata,kiss_fft_scalar *t
         st->tmpbuf[ncfft - k].i *= -1;
     }
     kiss_fft (st->substate, st->tmpbuf, (kiss_fft_cpx *) timedata);
+    for (k = 0; k < (ncfft * 2); k++) {
+        timedata[k] /= 2;
+    }
 }
