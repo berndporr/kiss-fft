@@ -17,33 +17,30 @@ public class KISSFastFourierTransformer {
     }
 
     public Complex[] transform(Complex[] complex, TransformType transformType) {
-        int is_inverse = 0;
-        if (transformType == TransformType.INVERSE) is_inverse = 1;
-        return dofft(complex,is_inverse);
-    }
-
-    public Complex[] transform(Double[] v, TransformType transformType) {
-        int is_inverse = 0;
-        if (transformType == TransformType.INVERSE) is_inverse = 1;
-        int n = v.length;
-        Complex[] cv = new Complex[n];
-        for(int i=0;i<n;i++) {
-            cv[i] = new Complex(v[i]);
-        }
-        return dofft(cv,is_inverse);
+        return dofft(complex,transformtype2Int(transformType));
     }
 
     public Complex[] transform(double[] v, TransformType transformType) {
-        int is_inverse = 0;
-        if (transformType == TransformType.INVERSE) is_inverse = 1;
+        return dofftdouble(v,transformtype2Int(transformType));
+    }
+
+    public Complex[] transform(Double[] v, TransformType transformType) {
         int n = v.length;
-        Complex[] cv = new Complex[n];
+        double[] cv = new double[n];
         for(int i=0;i<n;i++) {
-            cv[i] = new Complex(v[i]);
+            cv[i] = v[i];
         }
-        return dofft(cv,is_inverse);
+        return dofftdouble(cv,transformtype2Int(transformType));
     }
 
     private native Complex[] dofft(Complex[] data, int is_inverse);
+
+    private native Complex[] dofftdouble(double[] data, int is_inverse);
+
+    private int transformtype2Int(TransformType transformType) {
+        int i = 0;
+        if (transformType == TransformType.INVERSE) i = 1;
+        return i;
+    }
 
 }
