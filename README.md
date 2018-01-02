@@ -1,7 +1,7 @@
 # KISS FFT
 
-KISS FFT - A mixed-radix Fast Fourier Transform based up on the principle, 
-"Keep It Simple, Stupid."
+KISS FFT - A mixed-radix Fast Fourier Transform in C with an Android
+JNI wrapper
 
 ## In C
 
