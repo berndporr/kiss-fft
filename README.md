@@ -73,7 +73,9 @@ compile project(":jnifft-release")
 kissFastFourierTransformer = new KISSFastFourierTransformer();
 Complex[] outdata = kissFastFourierTransformer.transform(indata, TransformType.FORWARD);
 ```
-where `indata` and `outdata` are of type Complex as defined in apache Commons
+where `indata` can be of type Complex, Double or double
+(converterted into Complex) and `outdata`
+is of type Complex as defined in apache Commons
 and the constant `TransformType` is also defined there which determines
 if it's a forward or inverse transform. It can be used as a direct
 replacement of the apache commons FFT function.
