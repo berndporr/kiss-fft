@@ -80,6 +80,11 @@ and the constant `TransformType` is also defined there which determines
 if it's a forward or inverse transform. It can be used as a direct
 replacement of the apache commons FFT function.
 
+### Unit tests
+Run `FFTTest` which compares the results with that from the
+apache commons FFT, does a DC test and does an ifft(fft) test to
+check the rounding errors and remaining imaginary parts.
+
 
 ## Attribution
 This is a fork from the original kiss-fft library by Mark Borgerding
