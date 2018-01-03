@@ -76,10 +76,22 @@ delete[] cx_out;
 ```
 
 ### Data type for the FFT
-The default data type is `float` which is kept in the C macro `kiss_fft_scalar` but with a compiler-define this can be changed to, for example in CMake:
+The default data type is `float` which is kept in the C macro `kiss_fft_scalar` but with a compiler-define this can be changed to (for example in CMake):
 * double: `add_definitions(-Dkiss_fft_scalar=double)` where the C macro `kiss_fft_scalar` is defined as `double`.
 * 16 bit int: `add_definitions(-DFIXED_POINT=16)` where the C macro `FIXED_POINT` is set to the number 16 which in turn then sets `kiss_fft_scalar` to `int16_t`.
 * 32 bit int: `add_definitions(-DFIXED_POINT=32)` where the C macro `FIXED_POINT` is set to the number 32 which in turn then sets `kiss_fft_scalar` to `int32_t`.
+
+### Installation
+The library is so small that you can directly include the sources in your
+project or you can pre-package it as a static library and then link it
+against your project. Create the static library with the help of cmake:
+```
+cmake .
+make
+make install
+```
+which is the installed in the usual places (e.g. `/usr/local/lib` and
+`/usr/local/include`) and is called `libkiss-fft.a`.
 
 ## Android
 Super-fast native FFTs under Android
