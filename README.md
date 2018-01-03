@@ -82,7 +82,7 @@ The default data type is `float` which is kept in the C macro `kiss_fft_scalar` 
 * 32 bit int: `add_definitions(-DFIXED_POINT=32)` where the C macro `FIXED_POINT` is set to the number 32 which in turn then sets `kiss_fft_scalar` to `int32_t`.
 
 ## Android
-Do super-fast native FFTs under Android
+Super-fast native FFTs under Android
 
 ### Compilation
 Open this project in Android studio and run "Build". Depending
@@ -122,11 +122,10 @@ public double[] transformRealOptimisedInverse(Complex[] v)
 ```
 
 ### Unit tests
-Run `FFTTest` and `FFTRTest` which compare the results with that from the
-apache commons FFT functions and performs an ifft(fft) test to
-check for rounding errors. The unit tests show also how these
-functions can be used.
+Run `FFTTest` and `FFTRTest` which compare the results to that from the
+apache commons FFT functions and perform an ifft(fft) test to
+check for rounding errors.
 
 ## Attribution
-This is a fork and stripped down version of the original kiss-fft library
+This is a fork, stripped down and further debugged version of the original kiss-fft library
 by Mark Borgerding <Mark@Borgerding.net>.
