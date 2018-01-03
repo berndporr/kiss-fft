@@ -1,7 +1,7 @@
 # KISS FFT
 
 KISS FFT - A mixed-radix Fast Fourier Transform in C with an Android
-JNI wrapper
+JNI wrapper.
 
 ## In C
 
@@ -10,31 +10,76 @@ JNI wrapper
 The basic usage for 1-d complex FFT is:
 
 ```
-        #include "kiss_fft.h"
+#include "kiss_fft.h"
 
-        kiss_fft_cfg cfg = kiss_fft_alloc( nfft, is_inverse_fft, 0, 0 );
-
-            // put kth sample in cx_in[k].r and cx_in[k].i
+kiss_fft_cfg cfg = kiss_fft_alloc( nfft, is_inverse_fft, 0, 0 );
+kiss_fft_cpx *cx_in = new kiss_fft_cpx[nfft];
+kiss_fft_cpx *cx_out = new kiss_fft_cpx[nfft];
+    
+// put kth sample in cx_in[k].r and cx_in[k].i
             
-            kiss_fft( cfg , cx_in , cx_out );
+kiss_fft( cfg , cx_in , cx_out );
             
-            // transformed. DC is in cx_out[0].r and cx_out[0].i 
+// transformed. DC is in cx_out[0].r and cx_out[0].i 
             
-        free(cfg);
+free(cfg);
+delete[] cx_in;
+delete[] cx_out;
 ```
-
-The frequency-domain data is stored from DC up to 2PI.
-So cx_out[0] is the DC bin of the FFT and cx_out[nfft/2]
+* `nfft` is the number of samples in both time- and frequency domain
+* `is_inverse` is 0 for the forward transform and 1 for the inverse
+* `cx_in` and `cx_out` are arrays of `nfft` samples
+* Frequency domain: `cx_out[0]` is the DC bin of the FFT and `cx_out[nfft/2]`
 is the Nyquist bin (if exists).
-
-Declarations are in "kiss_fft.h", along with a brief description of the 
-functions you'll need to use.
-
-Code definitions for 1d complex FFTs are in kiss_fft.c.
+* Files: `kiss_fft.h`, `kiss_fft.c` and `_kiss_fft_guts.h`.
 
 ### Real valued FFT
 
 A real valued optimized FFT which takes real valued signals as its input is implemtned in `kiss_fftr.h` and `kiss_fftr.c`. It returns the positive half-spectrum: (nfft/2+1) complex frequency bins.
+
+#### Real signal to complex frequencies transform
+
+```
+kiss_fftr_cfg cfg = kiss_fftr_alloc(nfft, 0, 0, 0);
+kiss_fft_scalar *cx_in = new kiss_fft_scalar[nfft];
+kiss_fft_cpx *cx_out = new kiss_fft_cpx[nfft/2+1];
+
+// put `nfft` samples in cx_in[k]
+
+kiss_fftr(cfg, cx_in, cx_out);
+
+// Process the spectrum `cx_out` here: We have `nfft/2+1` (!) samples.
+            
+free(cfg);
+delete[] cx_in;
+delete[] cx_out;
+```
+
+#### Complex frequencies to real signal transform
+
+```
+kiss_fftr_cfg cfg = kiss_fftr_alloc(nfft, 1, 0, 0);
+kiss_fft_cpx *cx_in = new kiss_fft_cpx[nfft/2+1];
+kiss_fft_scalar *cx_out = new kiss_fft_scalar[nfft];
+
+// put kth frequency sample in cx_in[k] up to index `nfft/2`.
+// No need to populate the mirror.
+
+kiss_fftr(cfg, cx_in, cx_out);
+
+// Process signal `cx_out` here. It has again `nfft` samples
+// and is real valued.
+            
+free(cfg);
+delete[] cx_in;
+delete[] cx_out;
+```
+
+### Data type for the FFT
+The default data type is `float` which is kept in the C macro `kiss_fft_scalar` but with a compiler-define this can be changed to, for example in CMake:
+* double: `add_definitions(-Dkiss_fft_scalar=double)` where the C macro `kiss_fft_scalar` is defined as `double`.
+* 16 bit int: `add_definitions(-DFIXED_POINT=16)` where the C macro `FIXED_POINT` is set to the number 16 which in turn then sets `kiss_fft_scalar` to `int16_t`.
+* 32 bit int: `add_definitions(-DFIXED_POINT=32)` where the C macro `FIXED_POINT` is set to the number 32 which in turn then sets `kiss_fft_scalar` to `int32_t`.
 
 ## Android
 Do super-fast native FFTs under Android
@@ -62,14 +107,13 @@ The constant `TransformType` is also defined in apache Commons which determines
 if it's a forward or inverse transform. It can be used as a direct
 replacement of the apache commons FFT function.
 
-There are also convenience functions as in the commons library for double and
-Double which perform the conversion to Complex in C++ and are also very fast.
+There are also convenience functions as implemented in the apache commons library for double and Double which perform the conversion to Complex in C++. The function for the primitive type double is slightly faster than the one with Double.
 
 ### Real to Complex and Complex to Real transform
 For real valued sequences there are two optimised functions which
-directly perform the FFT on the raw double buffer without any
-conversion to complex. For real valued sequences this runs at least
-twice as fast as the functions above.
+directly perform the FFT on the raw `double` buffer without any
+conversion to `Complex`. For such real valued sequences this runs at least
+twice as fast as the Complex FFT functions above.
 The complex frequency sequence of the real sequence of length N has the length
 N/2+1 and then expands back to length N by the inverse transform:
 ```
@@ -78,10 +122,11 @@ public double[] transformRealOptimisedInverse(Complex[] v)
 ```
 
 ### Unit tests
-Run `FFTTest` and `FFTRTest` which compares the results with that from the
-apache commons FFT and does an ifft(fft) test to
-check for rounding errors.
+Run `FFTTest` and `FFTRTest` which compare the results with that from the
+apache commons FFT functions and performs an ifft(fft) test to
+check for rounding errors. The unit tests show also how these
+functions can be used.
 
 ## Attribution
-This is a fork from the original kiss-fft library by Mark Borgerding
-<Mark@Borgerding.net>.
+This is a fork and stripped down version of the original kiss-fft library
+by Mark Borgerding <Mark@Borgerding.net>.

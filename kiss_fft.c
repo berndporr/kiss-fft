@@ -1,5 +1,6 @@
 /*
 Copyright (c) 2003-2010, Mark Borgerding
+Copyright (c) 2017, Bernd Porr
 
 All rights reserved.
 
