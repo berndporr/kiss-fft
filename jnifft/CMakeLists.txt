@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-# by default we have double precision
+# by default we have double precision but just to be sure!
 add_definitions(-Dkiss_fft_scalar=double)
 
 # Creates and names a library, sets it as either STATIC
