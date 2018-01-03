@@ -32,7 +32,6 @@ Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofft(JNIEnv *env, job
     kiss_fft_cpx *inArray = new kiss_fft_cpx[n];
     kiss_fft_cpx *outArray = new kiss_fft_cpx[n];
 
-
     for (int j = 0; j < n; j++) {
         jobject one = env->GetObjectArrayElement(data, j);
         double re = 0;
