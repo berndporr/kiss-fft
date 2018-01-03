@@ -40,6 +40,8 @@ A real valued optimized FFT which takes real valued signals as its input is impl
 #### Real signal to complex frequencies transform
 
 ```
+#include "kiss_fftr.h"
+
 kiss_fftr_cfg cfg = kiss_fftr_alloc(nfft, 0, 0, 0);
 kiss_fft_scalar *cx_in = new kiss_fft_scalar[nfft];
 kiss_fft_cpx *cx_out = new kiss_fft_cpx[nfft/2+1];
@@ -58,6 +60,8 @@ delete[] cx_out;
 #### Complex frequencies to real signal transform
 
 ```
+#include "kiss_fftr.h"
+
 kiss_fftr_cfg cfg = kiss_fftr_alloc(nfft, 1, 0, 0);
 kiss_fft_cpx *cx_in = new kiss_fft_cpx[nfft/2+1];
 kiss_fft_scalar *cx_out = new kiss_fft_scalar[nfft];
@@ -75,22 +79,22 @@ delete[] cx_in;
 delete[] cx_out;
 ```
 
-### Data type for the FFT
+### Setting the data type for the FFT
 The default data type is `float` which is kept in the C macro `kiss_fft_scalar` but with a compiler-define this can be changed to (for example in CMake):
 * double: `add_definitions(-Dkiss_fft_scalar=double)` where the C macro `kiss_fft_scalar` is defined as `double`.
 * 16 bit int: `add_definitions(-DFIXED_POINT=16)` where the C macro `FIXED_POINT` is set to the number 16 which in turn then sets `kiss_fft_scalar` to `int16_t`.
 * 32 bit int: `add_definitions(-DFIXED_POINT=32)` where the C macro `FIXED_POINT` is set to the number 32 which in turn then sets `kiss_fft_scalar` to `int32_t`.
 
-### Installation
+### Installation / Usage
 The library is so small that you can directly include the sources in your
 project or you can pre-package it as a static library and then link it
-against your project. Create the static library with the help of cmake:
+into your project. Create the static library (with the help of cmake):
 ```
 cmake .
 make
 make install
 ```
-which is the installed in the usual places (e.g. `/usr/local/lib` and
+which is installed in the usual places (e.g. `/usr/local/lib` and
 `/usr/local/include`) and is called `libkiss-fft.a`.
 
 ## Android
