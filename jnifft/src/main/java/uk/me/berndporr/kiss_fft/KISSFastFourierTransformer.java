@@ -16,8 +16,20 @@ public class KISSFastFourierTransformer {
         System.loadLibrary("kiss-fft-lib");
     }
 
-    public Complex[] transform(Complex[] complex, TransformType transformType) {
-        return dofft(complex,transformtype2Int(transformType));
+    public Complex[] transform(Complex[] input, TransformType transformType) {
+        double[] ri = new double[input.length*2];
+        int idx=0;
+        for(Complex c:input) {
+            ri[idx++] = c.getReal();
+            ri[idx++] = c.getImaginary();
+        }
+        ri = dofft(ri,transformtype2Int(transformType));
+        Complex result[] = new Complex[input.length];
+        idx = 0;
+        for(int i=0;i<input.length;i++) {
+            result[i] = new Complex(ri[idx++],ri[idx++]);
+        }
+        return result;
     }
 
     public Complex[] transform(double[] v) {
@@ -42,7 +54,7 @@ public class KISSFastFourierTransformer {
     }
 
 
-    private native Complex[] dofft(Complex[] data, int is_inverse);
+    private native double[] dofft(double[] data, int is_inverse);
 
     private native Complex[] dofftdouble(double[] data, int is_inverse);
 

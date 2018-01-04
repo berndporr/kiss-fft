@@ -41,13 +41,13 @@ public class BenchTest {
         KISSFastFourierTransformer kissfastFourierTransformer = new KISSFastFourierTransformer();
 
         final int testsize = 65536;
-        double[] indata = new double[testsize];
-        for (int i = 0; i < testsize; i++) indata[i] = Math.random() - 0.5;
+        Complex[] indata = new Complex[testsize];
+        for (int i = 0; i < testsize; i++) indata[i] = new Complex(Math.random() - 0.5);
         Log.d("FFTTest", "start FFT KISS");
         for(int i=0;i<20;i++) {
             Log.d("FFTTest", ""+i);
-            Complex[] indata2 = kissfastFourierTransformer.transformRealOptimisedForward(indata);
-            //indata = kissfastFourierTransformer.transformRealOptimisedInverse(indata2);
+            Complex[] indata2 = kissfastFourierTransformer.transform(indata,TransformType.FORWARD);
+            indata = kissfastFourierTransformer.transform(indata2,TransformType.INVERSE);
         }
         Log.d("FFTTest", "stop FFT KISS");
     }
