@@ -80,6 +80,7 @@ delete[] cx_out;
 ```
 
 ### Setting the data type for the FFT
+(Note this is only for the plain C version. The Android wrapper always expects double. If you use JNI then leave it to the default type.)
 The default data type is `double` which is kept in the C macro `kiss_fft_scalar` but with a compiler-define this can be changed to (for example in CMake):
 * float: `add_definitions(-Dkiss_fft_scalar=float)` where the C macro `kiss_fft_scalar` is defined as `float`.
 * 16 bit int: `add_definitions(-DFIXED_POINT=16)` where the C macro `FIXED_POINT` is set to the number 16 which in turn then sets `kiss_fft_scalar` to `int16_t`.
@@ -98,7 +99,7 @@ which is installed in the usual places (e.g. `/usr/local/lib` and
 `/usr/local/include`) and is called `libkiss-fft.a`.
 
 ## Android
-Super-fast native FFTs under Android
+Super-fast native FFTs under Android. Only double (default) for the FFT is supported.
 
 ### Compilation
 Open this project in Android studio and run "Build". Depending
