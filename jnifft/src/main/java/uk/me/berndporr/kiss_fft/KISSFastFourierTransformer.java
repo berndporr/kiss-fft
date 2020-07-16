@@ -32,6 +32,41 @@ public class KISSFastFourierTransformer {
         return result;
     }
 
+    public Complex[] transformFromDouble(double[] input, TransformType transformType) {
+        double[] ri = new double[input.length*2];
+        int idx = 0;
+        for(double c: input) {
+            ri[idx++] = c;
+            ri[idx++] = 0;
+        }
+        ri = dofft(ri,transformtype2Int(transformType));
+        Complex result[] = new Complex[input.length];
+        idx = 0;
+        for(int i = 0; i < input.length; i++) {
+            result[i] = new Complex(ri[idx++],ri[idx++]);
+        }
+        return result;
+    }
+
+    public float[][] transformFromDoubleToFloatArray(double[] input, TransformType transformType) {
+        double[] ri = new double[input.length * 2];
+        int idx = 0;
+        for(double c: input) {
+            ri[idx++] = c;
+            ri[idx++] = 0;
+        }
+        ri = dofft(ri, transformtype2Int(transformType));
+
+        float[][] result = new float[2][input.length];
+
+        idx = 0;
+        for (int i = 0; i < input.length; i++) {
+            result[0][i] = (float) ri[idx++];
+            result[1][i] = (float) ri[idx++];
+        }
+        return result;
+    }
+
     public Complex[] transform(double[] v) {
         return dofftdouble(v,0);
     }
