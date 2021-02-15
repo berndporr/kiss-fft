@@ -8,11 +8,10 @@
 
 #define KISS_FFT_MALLOC malloc
 #define KISS_FFT_FREE free
-#define kiss_fft_scalar double
 
 typedef struct {
-    kiss_fft_scalar r;
-    kiss_fft_scalar i;
+    double r;
+    double i;
 } kiss_fft_cpx;
 
 typedef struct kiss_fft_state* kiss_fft_cfg;
