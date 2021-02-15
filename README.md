@@ -84,7 +84,7 @@ The library is so small that you can directly include the sources in your
 project or you can pre-package it as a static library and then link it
 into your project. Create the static library (with the help of cmake):
 ```
-cmake . -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake .
 make
 make install
 ```
