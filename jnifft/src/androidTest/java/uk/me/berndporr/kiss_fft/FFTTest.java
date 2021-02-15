@@ -24,6 +24,8 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class FFTTest {
 
+    final String TAG = FFTTest.class.getSimpleName();
+
     private KISSFastFourierTransformer kissFastFourierTransformer;
 
     @Test
@@ -40,7 +42,7 @@ public class FFTTest {
         Complex[] outdata2 = fastFourierTransformer.transform(indata, TransformType.FORWARD);
         for (int i = 0; i < testsize; i++) {
             double err = outdata1[i].subtract(outdata2[i]).abs();
-            Log.d("FFTTest", "" + i +
+            Log.d(TAG, "" + i +
                     " (" + outdata1[i].getReal() + "," + outdata1[i].getImaginary() + ") -- " +
                     " (" + outdata2[i].getReal() + "," + outdata2[i].getImaginary() + ") = " + err);
             assertTrue(err < 1E-10);
@@ -59,7 +61,7 @@ public class FFTTest {
         Complex[] outdata2 = kissFastFourierTransformer.transform(outdata1, TransformType.INVERSE);
         for (int i = 0; i < testsize; i++) {
             double err = Math.abs(indata[i] - outdata2[i].getReal());
-            Log.d("FFTTest", "" + i +
+            Log.d(TAG, "" + i +
                     " (" + indata[i] + ",0) -- " +
                     " (" + outdata2[i].getReal() + "," + outdata2[i].getImaginary() + ") = " + err);
             assertTrue(err < 1E-15);

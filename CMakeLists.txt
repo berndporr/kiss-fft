@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1.0)
 
-project(kiss-fft VERSION 1.1.0 LANGUAGES CXX)
+project(kiss-fft VERSION 1.2.0 LANGUAGES CXX)
 
 set (CMAKE_CXX_STANDARD 11)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)

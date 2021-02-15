@@ -26,6 +26,8 @@ public class FFTRTest {
 
     private KISSFastFourierTransformer kissFastFourierTransformer;
 
+    final String TAG = FFTRTest.class.getSimpleName();
+
     @Test
     public void compareWithMathCommons() {
         kissFastFourierTransformer = new KISSFastFourierTransformer();
@@ -40,7 +42,7 @@ public class FFTRTest {
         Complex[] outdata2 = fastFourierTransformer.transform(indata, TransformType.FORWARD);
         for (int i = 0; i < outdata1.length; i++) {
             double err = outdata1[i].subtract(outdata2[i]).abs();
-            Log.d("FFTTest", "" + i +
+            Log.d(TAG, "" + i +
                     " (" + outdata1[i].getReal() + "," + outdata1[i].getImaginary() + ") -- " +
                     " (" + outdata2[i].getReal() + "," + outdata2[i].getImaginary() + ") = " + err);
             assertTrue(err < 1E-10);
@@ -59,7 +61,7 @@ public class FFTRTest {
         double[] outdata2 = kissFastFourierTransformer.transformRealOptimisedInverse(outdata1);
         for (int i = 0; i < testsize; i++) {
             double err = Math.abs(indata[i] - outdata2[i]);
-            Log.d("FFTTest", "" + i +
+            Log.d(TAG, "" + i +
                     " (" + indata[i] + ",0) -- " +
                     " (" + outdata2[i] + "0) = " + err);
             assertTrue(err < 1E-15);
