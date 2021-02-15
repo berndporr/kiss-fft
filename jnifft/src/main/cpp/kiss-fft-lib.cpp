@@ -24,7 +24,7 @@ Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofft(JNIEnv *env, job
         return NULL;
     }
 
-    kiss_fft_cfg cfg = kiss_fft_alloc(n, is_inverse, 0, 0);
+    kiss_fft_cfg cfg = kiss_fft_alloc(n, is_inverse);
 
     double *inValues = env->GetDoubleArrayElements(inArray, 0);
 
@@ -61,7 +61,7 @@ Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofftdouble(JNIEnv *en
         return NULL;
     }
 
-    kiss_fft_cfg cfg = kiss_fft_alloc(n, is_inverse, 0, 0);
+    kiss_fft_cfg cfg = kiss_fft_alloc(n, is_inverse);
     kiss_fft_cpx *inArray = new kiss_fft_cpx[n];
     kiss_fft_cpx *outArray = new kiss_fft_cpx[n];
 
@@ -114,7 +114,7 @@ Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofftr(JNIEnv *env, jo
     }
 
     int is_inverse = 0;
-    kiss_fftr_cfg cfg = kiss_fftr_alloc(n, is_inverse, 0, 0);
+    kiss_fftr_cfg cfg = kiss_fftr_alloc(n, is_inverse);
     kiss_fft_cpx *outArray = new kiss_fft_cpx[n];
 
     double *values = env->GetDoubleArrayElements(data, 0);
@@ -167,7 +167,7 @@ Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofftri(JNIEnv *env, j
     // length of real sequence
     int real_data_points = 2 * n - 2;
 
-    kiss_fftr_cfg cfg = kiss_fftr_alloc(real_data_points, is_inverse, 0, 0);
+    kiss_fftr_cfg cfg = kiss_fftr_alloc(real_data_points, is_inverse);
     kiss_fft_cpx *inArray = new kiss_fft_cpx[n];
 
     for (int j = 0; j < n; j++) {

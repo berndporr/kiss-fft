@@ -6,32 +6,14 @@
 #include <math.h>
 #include <string.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define KISS_FFT_MALLOC malloc
 #define KISS_FFT_FREE free
-
-
-#ifdef FIXED_POINT
-#include <sys/types.h>	
-# if (FIXED_POINT == 32)
-#  define kiss_fft_scalar int32_t
-# else	
-#  define kiss_fft_scalar int16_t
-# endif
-#else
-# ifndef kiss_fft_scalar
-/*  default is double */
-#   define kiss_fft_scalar double
-# endif
-#endif
+#define kiss_fft_scalar double
 
 typedef struct {
     kiss_fft_scalar r;
     kiss_fft_scalar i;
-}kiss_fft_cpx;
+} kiss_fft_cpx;
 
 typedef struct kiss_fft_state* kiss_fft_cfg;
 
@@ -40,8 +22,8 @@ typedef struct kiss_fft_state* kiss_fft_cfg;
  *  
  *  Initialize a FFT (or IFFT) algorithm's cfg/state buffer.
  *
- *  typical usage:      kiss_fft_cfg mycfg=kiss_fft_alloc(1024,0,NULL,NULL); for FFT
- *                      kiss_fft_cfg mycfg=kiss_fft_alloc(1024,1,NULL,NULL); for IFFT
+ *  typical usage:      kiss_fft_cfg mycfg=kiss_fft_alloc(1024,0); for FFT
+ *                      kiss_fft_cfg mycfg=kiss_fft_alloc(1024,1); for IFFT
  *
  *  The return value from fft_alloc is a cfg buffer used internally
  *  by the fft routine or NULL.
@@ -61,7 +43,7 @@ typedef struct kiss_fft_state* kiss_fft_cfg;
  *      buffer size in *lenmem.
  * */
 
-kiss_fft_cfg kiss_fft_alloc(int nfft,int inverse_fft,void * mem,size_t * lenmem); 
+kiss_fft_cfg kiss_fft_alloc(int nfft,int inverse_fft,void * mem = nullptr,size_t * lenmem = nullptr); 
 
 /*
  * kiss_fft(cfg,in_out_buf)
@@ -92,9 +74,5 @@ int kiss_fft_next_fast_size(int n);
 /* for real ffts, we need an even size */
 #define kiss_fftr_next_fast_size_real(n) \
         (kiss_fft_next_fast_size( ((n)+1)>>1)<<1)
-
-#ifdef __cplusplus
-} 
-#endif
 
 #endif
