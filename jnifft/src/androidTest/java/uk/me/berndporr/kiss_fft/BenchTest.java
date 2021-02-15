@@ -10,8 +10,6 @@ import org.apache.commons.math3.transform.TransformType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static junit.framework.Assert.assertFalse;
-
 /**
  * Instrumented test, which will execute on an Android device.
  *
@@ -54,7 +52,7 @@ public class BenchTest {
 
 
     @Test
-    public void doTimingTest() throws Exception {
+    public void doTimingTest() {
         doFFTandIFFTKISS();
         doFFTandIFFTCommons();
     }

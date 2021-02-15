@@ -20,7 +20,7 @@ add_library( # Sets the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
-             src/main/cpp/kiss-fft-lib.cpp ../kiss_fft.c ../kiss_fftr.c)
+             src/main/cpp/kiss-fft-lib.cpp ../kiss_fft.cpp ../kiss_fftr.cpp)
 
 
 # Specifies libraries CMake should link to your target library. You

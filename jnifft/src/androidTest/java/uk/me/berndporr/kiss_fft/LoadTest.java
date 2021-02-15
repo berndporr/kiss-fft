@@ -5,7 +5,7 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -16,8 +16,8 @@ import static junit.framework.Assert.assertFalse;
 public class LoadTest {
 
     @Test
-    public void useAppContext() throws Exception {
+    public void useAppContext() {
         KISSFastFourierTransformer kissFastFourierTransformer = new KISSFastFourierTransformer();
-        assertFalse(kissFastFourierTransformer == null);
+        assertNotNull(kissFastFourierTransformer);
     }
 }

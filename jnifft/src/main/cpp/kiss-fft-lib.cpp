@@ -7,7 +7,7 @@ extern "C" {
 
 #define TAG "KISSFFT"
 
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jdoubleArray
 Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofft(JNIEnv *env, jobject,
                                                                 jdoubleArray inArray,
                                                                 jint is_inverse) {
@@ -42,7 +42,7 @@ Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofft(JNIEnv *env, job
 }
 
 
-JNIEXPORT jobjectArray JNICALL
+JNIEXPORT jobjectArray
 Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofftdouble(JNIEnv *env, jobject,
                                                                       jdoubleArray data,
                                                                       jint is_inverse) {
@@ -95,7 +95,7 @@ Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofftdouble(JNIEnv *en
 }
 
 
-JNIEXPORT jobjectArray JNICALL
+JNIEXPORT jobjectArray
 Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofftr(JNIEnv *env, jobject,
                                                                  jdoubleArray data) {
 
@@ -143,7 +143,7 @@ Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofftr(JNIEnv *env, jo
 }
 
 
-JNIEXPORT jdoubleArray JNICALL
+JNIEXPORT jdoubleArray
 Java_uk_me_berndporr_kiss_1fft_KISSFastFourierTransformer_dofftri(JNIEnv *env, jobject,
                                                                   jobjectArray data) {
 

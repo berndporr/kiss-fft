@@ -24,7 +24,7 @@ public class KISSFastFourierTransformer {
             ri[idx++] = c.getImaginary();
         }
         ri = dofft(ri,transformtype2Int(transformType));
-        Complex result[] = new Complex[input.length];
+        Complex[] result = new Complex[input.length];
         idx = 0;
         for(int i=0;i<input.length;i++) {
             result[i] = new Complex(ri[idx++],ri[idx++]);

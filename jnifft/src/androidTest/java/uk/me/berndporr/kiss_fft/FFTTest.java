@@ -10,7 +10,7 @@ import org.apache.commons.math3.transform.TransformType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -27,10 +27,10 @@ public class FFTTest {
     private KISSFastFourierTransformer kissFastFourierTransformer;
 
     @Test
-    public void compareWithMathCommons() throws Exception {
+    public void compareWithMathCommons() {
         kissFastFourierTransformer = new KISSFastFourierTransformer();
         FastFourierTransformer fastFourierTransformer = new FastFourierTransformer(DftNormalization.STANDARD);
-        assertFalse(kissFastFourierTransformer == null);
+        assertNotNull(kissFastFourierTransformer);
 
         final int testsize = 64;
         Complex[] indata = new Complex[testsize];
@@ -49,7 +49,7 @@ public class FFTTest {
 
 
     @Test
-    public void doFFTandIFFT() throws Exception {
+    public void doFFTandIFFT() {
         kissFastFourierTransformer = new KISSFastFourierTransformer();
 
         final int testsize = 64;
@@ -69,7 +69,7 @@ public class FFTTest {
 
 
     @Test
-    public void doDCTest() throws Exception {
+    public void doDCTest() {
         kissFastFourierTransformer = new KISSFastFourierTransformer();
 
         final int testsize = 64;

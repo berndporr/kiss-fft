@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2003-2010, Mark Borgerding
-Copyright (c) 2017, Bernd Porr
+Copyright (c) 2017-2021, Bernd Porr
 
 All rights reserved.
 
@@ -209,7 +209,7 @@ static void kf_bfly_generic(
     int u, k, q1, q;
     kiss_fft_cpx *twiddles = st->twiddles;
     kiss_fft_cpx t;
-    int Norig = st->nfft;
+    long unsigned int Norig = st->nfft;
 
     kiss_fft_cpx *scratch = (kiss_fft_cpx *) KISS_FFT_TMP_ALLOC(sizeof(kiss_fft_cpx) * p);
 
@@ -223,7 +223,7 @@ static void kf_bfly_generic(
 
         k = u;
         for (q1 = 0; q1 < p; ++q1) {
-            int twidx = 0;
+            long unsigned int twidx = 0;
             Fout[k] = scratch[0];
             for (q = 1; q < p; ++q) {
                 twidx += fstride * k;
@@ -330,14 +330,14 @@ void kf_factor(int n, int *facbuf) {
  * It can be freed with free(), rather than a kiss_fft-specific function.
  * */
 kiss_fft_cfg kiss_fft_alloc(int nfft, int inverse_fft, void *mem, size_t *lenmem) {
-    kiss_fft_cfg st = NULL;
+    kiss_fft_cfg st = nullptr;
     size_t memneeded = sizeof(struct kiss_fft_state)
                        + sizeof(kiss_fft_cpx) * (nfft - 1); /* twiddle factors*/
 
-    if (lenmem == NULL) {
+    if (lenmem == nullptr) {
         st = (kiss_fft_cfg) KISS_FFT_MALLOC(memneeded);
     } else {
-        if (mem != NULL && *lenmem >= memneeded)
+        if (mem != nullptr && *lenmem >= memneeded)
             st = (kiss_fft_cfg) mem;
         *lenmem = memneeded;
     }
