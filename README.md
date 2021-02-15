@@ -31,11 +31,11 @@ delete[] cx_out;
 * `cx_in` and `cx_out` are arrays of `nfft` samples
 * Frequency domain: `cx_out[0]` is the DC bin of the FFT and `cx_out[nfft/2]`
 is the Nyquist bin (if exists).
-* Files: `kiss_fft.h`, `kiss_fft.c` and `_kiss_fft_guts.h`.
+* Files: `kiss_fft.h`, `kiss_fft.cpp` and `_kiss_fft_guts.h`.
 
 ### Real valued FFT
 
-A real valued optimized FFT which takes real valued signals as its input is implemtned in `kiss_fftr.h` and `kiss_fftr.c`. It returns the positive half-spectrum: (nfft/2+1) complex frequency bins.
+A real valued optimized FFT which takes real valued signals as its input is implemtned in `kiss_fftr.h` and `kiss_fftr.cpp`. It returns the positive half-spectrum: (nfft/2+1) complex frequency bins.
 
 #### Real signal to complex frequencies transform
 
@@ -92,7 +92,7 @@ which is installed in the usual places (e.g. `/usr/local/lib` and
 `/usr/local/include`) and is called `libkiss-fft.a`.
 
 ## Android
-Super-fast native FFTs under Android. Only double (default) for the FFT is supported.
+Super-fast native FFTs under Android.
 
 ### Compilation
 Open this project in Android studio and run "Build". Depending
@@ -131,11 +131,10 @@ public Complex[] transformRealOptimisedForward(double[] v)
 public double[] transformRealOptimisedInverse(Complex[] v)
 ```
 
-### Unit tests
+### Unit tests (Android vs C)
 Run `FFTTest` and `FFTRTest` which compare the results to that from the
 apache commons FFT functions and perform an ifft(fft) test to
 check for rounding errors.
 
 ## Attribution
-This is a fork, stripped down and further debugged version of the original kiss-fft library
-by Mark Borgerding <Mark@Borgerding.net>.
+This is a fork, stripped down and further debugged version of the original kiss-fft library by Mark Borgerding <Mark@Borgerding.net>.
