@@ -31,8 +31,6 @@ static void kf_bfly2(
     kiss_fft_cpx t;
     Fout2 = Fout + m;
     do {
-        C_FIXDIV(*Fout, 2); C_FIXDIV(*Fout2, 2);
-
         C_MUL (t, *Fout2, *tw1);
         tw1 += fstride;
         C_SUB(*Fout2, *Fout, t);
@@ -58,8 +56,6 @@ static void kf_bfly4(
     tw3 = tw2 = tw1 = st->twiddles;
 
     do {
-        C_FIXDIV(*Fout, 4); C_FIXDIV(Fout[m], 4); C_FIXDIV(Fout[m2], 4); C_FIXDIV(Fout[m3], 4);
-
         C_MUL(scratch[0], Fout[m], *tw1);
         C_MUL(scratch[1], Fout[m2], *tw2);
         C_MUL(scratch[2], Fout[m3], *tw3);
@@ -105,8 +101,6 @@ static void kf_bfly3(
     tw1 = tw2 = st->twiddles;
 
     do {
-        C_FIXDIV(*Fout, 3); C_FIXDIV(Fout[m], 3); C_FIXDIV(Fout[m2], 3);
-
         C_MUL(scratch[1], Fout[m], *tw1);
         C_MUL(scratch[2], Fout[m2], *tw2);
 
@@ -155,9 +149,6 @@ static void kf_bfly5(
 
     tw = st->twiddles;
     for (u = 0; u < m; ++u) {
-        C_FIXDIV(*Fout0, 5); C_FIXDIV(*Fout1, 5); C_FIXDIV(*Fout2, 5); C_FIXDIV(*Fout3,
-                                                                                5); C_FIXDIV(*Fout4,
-                                                                                             5);
         scratch[0] = *Fout0;
 
         C_MUL(scratch[1], *Fout1, tw[u * fstride]);
@@ -211,13 +202,12 @@ static void kf_bfly_generic(
     kiss_fft_cpx t;
     long unsigned int Norig = st->nfft;
 
-    kiss_fft_cpx *scratch = (kiss_fft_cpx *) KISS_FFT_TMP_ALLOC(sizeof(kiss_fft_cpx) * p);
+    kiss_fft_cpx *scratch = (kiss_fft_cpx *) malloc(sizeof(kiss_fft_cpx) * p);
 
     for (u = 0; u < m; ++u) {
         k = u;
         for (q1 = 0; q1 < p; ++q1) {
             scratch[q1] = Fout[k];
-            C_FIXDIV(scratch[q1], p);
             k += m;
         }
 
@@ -234,7 +224,7 @@ static void kf_bfly_generic(
             k += m;
         }
     }
-    KISS_FFT_TMP_FREE(scratch);
+    free(scratch);
 }
 
 static
@@ -364,10 +354,10 @@ void kiss_fft_stride(kiss_fft_cfg st, const kiss_fft_cpx *fin, kiss_fft_cpx *fou
     if (fin == fout) {
         //NOTE: this is not really an in-place FFT algorithm.
         //It just performs an out-of-place FFT into a temp buffer
-        kiss_fft_cpx *tmpbuf = (kiss_fft_cpx *) KISS_FFT_TMP_ALLOC(sizeof(kiss_fft_cpx) * st->nfft);
+        kiss_fft_cpx *tmpbuf = (kiss_fft_cpx *) malloc(sizeof(kiss_fft_cpx) * st->nfft);
         kf_work(tmpbuf, fin, 1, in_stride, st->factors, st);
         memcpy(fout, tmpbuf, sizeof(kiss_fft_cpx) * st->nfft);
-        KISS_FFT_TMP_FREE(tmpbuf);
+        free(tmpbuf);
     } else {
         kf_work(fout, fin, 1, in_stride, st->factors, st);
     }

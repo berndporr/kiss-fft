@@ -43,7 +43,7 @@ A real valued optimized FFT which takes real valued signals as its input is impl
 #include "kiss_fftr.h"
 
 kiss_fftr_cfg cfg = kiss_fftr_alloc(nfft, 0);
-kiss_fft_scalar *cx_in = new kiss_fft_scalar[nfft];
+double *cx_in = new kiss_fft_scalar[nfft];
 kiss_fft_cpx *cx_out = new kiss_fft_cpx[nfft/2+1];
 
 // put `nfft` samples in cx_in[k]
@@ -64,7 +64,7 @@ delete[] cx_out;
 
 kiss_fftr_cfg cfg = kiss_fftr_alloc(nfft, 1);
 kiss_fft_cpx *cx_in = new kiss_fft_cpx[nfft/2+1];
-kiss_fft_scalar *cx_out = new kiss_fft_scalar[nfft];
+double *cx_out = new kiss_fft_scalar[nfft];
 
 // put kth frequency sample in cx_in[k] up to index `nfft/2`.
 // No need to populate the mirror.
