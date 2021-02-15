@@ -12,7 +12,7 @@ The basic usage for 1-d complex FFT is:
 ```
 #include "kiss_fft.h"
 
-kiss_fft_cfg cfg = kiss_fft_alloc( nfft, is_inverse_fft, 0, 0 );
+kiss_fft_cfg cfg = kiss_fft_alloc( nfft, is_inverse_fft, nullptr, nullptr );
 kiss_fft_cpx *cx_in = new kiss_fft_cpx[nfft];
 kiss_fft_cpx *cx_out = new kiss_fft_cpx[nfft];
     
@@ -42,7 +42,7 @@ A real valued optimized FFT which takes real valued signals as its input is impl
 ```
 #include "kiss_fftr.h"
 
-kiss_fftr_cfg cfg = kiss_fftr_alloc(nfft, 0, 0, 0);
+kiss_fftr_cfg cfg = kiss_fftr_alloc(nfft, 0, nullptr, nullptr);
 kiss_fft_scalar *cx_in = new kiss_fft_scalar[nfft];
 kiss_fft_cpx *cx_out = new kiss_fft_cpx[nfft/2+1];
 
@@ -62,7 +62,7 @@ delete[] cx_out;
 ```
 #include "kiss_fftr.h"
 
-kiss_fftr_cfg cfg = kiss_fftr_alloc(nfft, 1, 0, 0);
+kiss_fftr_cfg cfg = kiss_fftr_alloc(nfft, 1, nullptr, nullptr);
 kiss_fft_cpx *cx_in = new kiss_fft_cpx[nfft/2+1];
 kiss_fft_scalar *cx_out = new kiss_fft_scalar[nfft];
 
