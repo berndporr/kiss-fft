@@ -16,6 +16,8 @@ typedef struct {
 
 typedef struct kiss_fft_state* kiss_fft_cfg;
 
+#include "_kiss_fft_guts.h"
+
 /* 
  *  kiss_fft_alloc
  *  
